@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using MediatrCurso.Features.Users.Commands.Create;
 using MediatrCurso.Features.Users.Queries.GetAllUsers;
+using MediatrCurso.Features.Users.Queries.GetUserById;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MediatrCurso.Controllers
@@ -28,6 +29,16 @@ namespace MediatrCurso.Controllers
         {
             var users = await _mediator.Send(new GetAllUsersQuery());
             return Ok(users);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var result = await _mediator.Send(new GetUserByIdQuery(id));
+
+            if (result is null) return NotFound("Registro não encontrado!");
+
+            return Ok(result);
         }
     }
 }
