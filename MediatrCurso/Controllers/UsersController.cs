@@ -1,5 +1,7 @@
 ﻿using MediatR;
 using MediatrCurso.Features.Users.Commands.Create;
+using MediatrCurso.Features.Users.Commands.Delete;
+using MediatrCurso.Features.Users.Commands.Update;
 using MediatrCurso.Features.Users.Queries.GetAllUsers;
 using MediatrCurso.Features.Users.Queries.GetUserById;
 using Microsoft.AspNetCore.Mvc;
@@ -39,6 +41,26 @@ namespace MediatrCurso.Controllers
             if (result is null) return NotFound("Registro não encontrado!");
 
             return Ok(result);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Create(UpdateUserCommand command)
+        {
+            var result = await _mediator.Send(command);
+
+            if(!result) return NotFound("Registro não encontrado!");
+
+            return Created();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var result = await _mediator.Send(new DeleteUserCommand(id));
+
+            if (!result) return NotFound("Registro não encontrado!");
+
+            return Created();
         }
     }
 }
